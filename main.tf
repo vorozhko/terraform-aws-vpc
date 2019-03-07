@@ -23,6 +23,10 @@ resource "aws_vpc" "this" {
   assign_generated_ipv6_cidr_block = "${var.assign_generated_ipv6_cidr_block}"
 
   tags = "${merge(map("Name", format("%s", var.name)), var.tags, var.vpc_tags)}"
+  
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
 
 resource "aws_vpc_ipv4_cidr_block_association" "this" {
@@ -189,6 +193,10 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 
   tags = "${merge(map("Name", format("%s-${var.public_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.public_subnet_tags)}"
+  
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
 
 #################
@@ -202,6 +210,10 @@ resource "aws_subnet" "private" {
   availability_zone = "${element(var.azs, count.index)}"
 
   tags = "${merge(map("Name", format("%s-${var.private_subnet_suffix}-%s", var.name, element(var.azs, count.index))), var.tags, var.private_subnet_tags)}"
+  
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
 
 ##################
